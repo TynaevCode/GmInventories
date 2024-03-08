@@ -1,0 +1,4 @@
+name: GmInventories
+version: 0.1
+main: Taskovich\GmInventories\Main
+api: 5.0.0

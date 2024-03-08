@@ -1,0 +1,8 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/TynaevCode/GmInventories
+build-by-default: true
+branches:
+- BE
+projects:
+  GmInventories:
+    path: ""
+...
