@@ -5,6 +5,10 @@
   <br>
   <h1>🎒 GmInventories</h1>
   <b>Separate inventories for each gamemode</b>
+  <br><br>
+  
+  [![Poggit](https://poggit.pmmp.io/shield.state/GmInventories?style=for-the-badge)](https://poggit.pmmp.io/p/GmInventories)
+  
 </div>
 
 ___
