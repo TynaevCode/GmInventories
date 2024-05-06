@@ -3,7 +3,6 @@
 namespace Taskovich\GmInventories;
 
 use pocketmine\plugin\PluginBase;
-
 use Taskovich\GmInventories\manager\InventoriesManager;
 
 class Main extends PluginBase
@@ -21,6 +20,7 @@ class Main extends PluginBase
 	{
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 		$this->inv_manager = new InventoriesManager($this);
+		$this->saveDefaultConfig();
 	}
 
 	/**

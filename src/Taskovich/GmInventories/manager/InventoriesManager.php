@@ -5,7 +5,6 @@ namespace Taskovich\GmInventories\manager;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\Config;
-
 use Taskovich\GmInventories\Main;
 
 class InventoriesManager
@@ -26,10 +25,11 @@ class InventoriesManager
 	function __construct(Main $main)
 	{
 		$this->main = $main;
-		$this->data_config = new Config($this->main->getDataFolder() . "inventories.json");
+		$this->data_config = new Config($main->getDataFolder() . "inventories.json");
 
-		foreach($this->data_config->getAll() as $nick => $data) {
-			$this->data[$nick] = unserialize($data);
+		foreach ($this->data_config->getAll() as $id => $data)
+		{
+			$this->data[$id] = unserialize($data);
 		}
 	}
 
@@ -38,11 +38,14 @@ class InventoriesManager
 	 */
 	public function saveAll(): void
 	{
-		foreach($this->data as $nick => $data) {
-			$this->data[$nick] = serialize($data);
+		$tmp_data = [];
+
+		foreach ($this->data as $id => $data)
+		{
+			$tmp_data[$id] = serialize($data);
 		}
 
-		$this->data_config->setAll($this->data);
+		$this->data_config->setAll($tmp_data);
 		$this->data_config->save();
 	}
 
@@ -54,12 +57,14 @@ class InventoriesManager
 	{
 		$gamemode = $player->getGamemode();
 
-		if($gamemode == GameMode::SPECTATOR())
+		if ($gamemode === GameMode::SPECTATOR())
+		{
 			return;
+		}
 
-		$nick = strtolower($player->getName());
+		$id = $this->getId($player);
 		$gamemode = $gamemode->getEnglishName();
-		$this->data[$nick][$gamemode] = [
+		$this->data[$id][$gamemode] = [
 			"main" => $player->getInventory()->getContents(),
 			"offhand" => $player->getOffHandInventory()->getContents(),
 			"armor" => $player->getArmorInventory()->getContents()
@@ -73,9 +78,24 @@ class InventoriesManager
 	 */
 	public function loadInventory(Player $player, GameMode $gamemode): array
 	{
-		$nick = strtolower($player->getName());
+		$id = $this->getId($player);
 		$gamemode = $player->getGamemode()->getEnglishName();
-		return $this->data[$nick][$gamemode] ?? [];
+		return $this->data[$id][$gamemode] ?? [
+			"main" => [],
+			"offhand" => [],
+			"armor" => []
+		];
 	}
 
+	private function getId(Player $player): string
+	{
+		$id = match ($this->main->getConfig()->get("data_type"))
+		{
+			"xuid" => $player->getXuid(),
+			"uuid" => $player->getUniqueId()->toString(),
+			default => strtolower($player->getName())
+		};
+
+		return empty($id) ? strtolower($player->getName()) : $id;
+	}
 }

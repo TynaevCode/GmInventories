@@ -28,8 +28,10 @@ class EventListener implements Listener
 	 */
 	public function onGameModeChange(PlayerGameModeChangeEvent $event): void
 	{
-		if($event->isCancelled())
+		if ($event->isCancelled())
+		{
 			return;
+		}
 
 		$manager = $this->main->getInventoriesManager();
 		$player = $event->getPlayer();
@@ -38,7 +40,8 @@ class EventListener implements Listener
 			function() use($manager, $player, $event)
 			{
 				$data = $manager->loadInventory($player, $event->getNewGamemode());
-				foreach($data as $name => $content) {
+				foreach ($data as $name => $content)
+				{
 					match($name) {
 						"main" => $player->getInventory()->setContents($content),
 						"offhand" => $player->getOffHandInventory()->setContents($content),
