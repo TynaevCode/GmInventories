@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src = "dont_touch_me/icon.png" width = "30%">
+  <img src = "icon.png" width = "30%">
 
   # 🎒 GmInventories</h1>
   **Separate inventories for each gamemode**
