@@ -38,9 +38,9 @@ class InventoriesManager
 					fn(array $items) => serialize(array_map(fn(Item $item) => $item->nbtSerialize(), $items)),
 					$contents
 				);
-				$serialized["gamemode"] = $gamemode;
+
 				$serialized["id"] = $id;
-				$this->db->executeInsert("data.save", $serialized);
+				$this->db->executeInsert("{$gamemode}.save", $serialized);
 			}
 		}
 
@@ -49,27 +49,30 @@ class InventoriesManager
 
 	public function loadAll(): void
 	{
-		foreach (self::GAMEMODES as $gamemode) {
-			$this->db->executeGeneric("table.init", ["gamemode" => $gamemode]);
-		}
+		$this->db->executeGeneric("table.init_survival");
+		$this->db->executeGeneric("table.init_creative");
+		$this->db->executeGeneric("table.init_adventure");
 
 		$this->db->waitAll();
 
 		foreach (self::GAMEMODES as $gamemode) {
-			$this->db->executeSelect("data.get_all", ["gamemode" => $gamemode], function (array $rows) use ($gamemode) {
-				foreach ($rows as $row) {
-					$id = $row["id"];
-					unset($row["id"]);
+			$this->db->executeSelect("{$gamemode}.get_all", [],
+				function (array $rows) use ($gamemode) {
+					foreach ($rows as $row) {
+						$id = $row["id"];
+						unset($row["id"]);
 
-					foreach ($row as $type => $serializedItems) {
-						$itemsData = unserialize($serializedItems);
-						$this->inventories[$id][$gamemode][$type] = array_map(
-							fn(CompoundTag $tag) => Item::nbtDeserialize($tag),
-							$itemsData
-						);
+						foreach ($row as $type => $serializedItems) {
+							$itemsData = unserialize($serializedItems);
+
+							$this->inventories[$id][$gamemode][$type] = array_map(
+								fn(CompoundTag $tag) => Item::nbtDeserialize($tag),
+								$itemsData
+							);
+						}
 					}
 				}
-			});
+			);
 		}
 
 		$this->db->waitAll();
@@ -95,6 +98,11 @@ class InventoriesManager
 	public function loadInventory(Player $player, GameMode $gameMode): void
 	{
 		$gm = $gameMode->getEnglishName();
+
+		if (!in_array($gm, self::GAMEMODES, true)) {
+			return;
+		}
+
 		$id = $this->getId($player);
 
 		$inventory = $this->inventories[$id][$gm] ?? [
