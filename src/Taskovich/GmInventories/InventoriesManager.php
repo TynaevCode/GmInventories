@@ -1,6 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Taskovich\GmInventories\manager;
+namespace Taskovich\GmInventories;
 
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
@@ -10,49 +10,22 @@ use Taskovich\GmInventories\Main;
 class InventoriesManager
 {
 
-	/** @var Main */
-	private Main $main;
-
-	/** @var Config */
 	private Config $data_config;
-
-	/** @var mixed[] */
 	private array $data = [];
 
-	/**
-	 * @param Main $main
-	 */
-	function __construct(Main $main)
+	public function __construct(private Main $main)
 	{
-		$this->main = $main;
-		$this->data_config = new Config($main->getDataFolder() . "inventories.json");
-
 		foreach ($this->data_config->getAll() as $id => $data)
 		{
 			$this->data[$id] = unserialize($data);
 		}
 	}
 
-	/**
-	 * @return void
-	 */
 	public function saveAll(): void
 	{
-		$tmp_data = [];
 
-		foreach ($this->data as $id => $data)
-		{
-			$tmp_data[$id] = serialize($data);
-		}
-
-		$this->data_config->setAll($tmp_data);
-		$this->data_config->save();
 	}
 
-	/**
-	 * @param Player $player 
-	 * @return void
-	 */
 	public function saveInventory(Player $player): void
 	{
 		$gamemode = $player->getGamemode();
@@ -71,15 +44,11 @@ class InventoriesManager
 		];
 	}
 
-	/**
-	 * @param Player $player 
-	 * @param GameMode $gamemode 
-	 * @return mixed[]
-	 */
 	public function loadInventory(Player $player, GameMode $gamemode): array
 	{
 		$id = $this->getId($player);
 		$gamemode = $player->getGamemode()->getEnglishName();
+
 		return $this->data[$id][$gamemode] ?? [
 			"main" => [],
 			"offhand" => [],
@@ -89,13 +58,13 @@ class InventoriesManager
 
 	private function getId(Player $player): string
 	{
-		$id = match ($this->main->getConfig()->get("data_type"))
-		{
+		$id = match ($this->main->getConfig()->get("data_type")) {
 			"xuid" => $player->getXuid(),
 			"uuid" => $player->getUniqueId()->toString(),
-			default => strtolower($player->getName())
+			"name" => strtolower($player->getName()),
+			default => null
 		};
 
-		return empty($id) ? strtolower($player->getName()) : $id;
+		return $id ?? strtolower($player->getName());
 	}
 }

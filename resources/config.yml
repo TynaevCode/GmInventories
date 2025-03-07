@@ -1,4 +1,4 @@
 # What data is used to store inventory?
-# xuid - Xbox ID | uuid - Unique player ID
+# xuid - Xbox ID | uuid - Unique player ID | name - Player nickname
 # (It is recommended to delete old data after changes)
 data_type: xuid
