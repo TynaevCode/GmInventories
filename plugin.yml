@@ -1,5 +1,5 @@
 name: GmInventories
-version: 0.7
-main: Taskovich\GmInventories\Main
+version: 1
+main: Taskov1ch\GmInventories\Main
 api: 5.0.0
 description: Separate inventories for each gamemode

@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskovich\GmInventories;
+namespace Taskov1ch\GmInventories;
 
 use pocketmine\plugin\PluginBase;
 
@@ -8,7 +8,7 @@ class Main extends PluginBase
 {
 	private InventoriesManager $manager;
 
-	protected function onEnable(): void
+	public function onEnable(): void
 	{
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 		$this->saveDefaultConfig();
@@ -16,7 +16,7 @@ class Main extends PluginBase
 		$this->manager = new InventoriesManager($this);
 	}
 
-	protected function onDisable(): void
+	public function onDisable(): void
 	{
 		$this->manager->saveAll();
 	}
@@ -25,5 +25,4 @@ class Main extends PluginBase
 	{
 		return $this->manager;
 	}
-
 }
