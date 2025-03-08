@@ -115,7 +115,8 @@ class InventoriesManager
 			match ($type) {
 				"main" => $player->getInventory()->setContents($items),
 				"armor" => $player->getArmorInventory()->setContents($items),
-				"offhand" => $player->getOffHandInventory()->setContents($items)
+				"offhand" => $player->getOffHandInventory()->setContents($items),
+				default => null
 			};
 		}
 	}
