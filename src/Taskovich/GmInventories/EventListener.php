@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskov1ch\GmInventories;
+namespace Taskovich\GmInventories;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerGameModeChangeEvent;

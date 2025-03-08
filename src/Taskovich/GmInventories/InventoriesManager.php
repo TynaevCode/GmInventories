@@ -1,13 +1,13 @@
 <?php
 
-namespace Taskov1ch\GmInventories;
+namespace Taskovich\GmInventories;
 
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
-use Taskov1ch\GmInventories\libs\poggit\libasynql\DataConnector;
-use Taskov1ch\GmInventories\libs\poggit\libasynql\libasynql;
+use poggit\libasynql\DataConnector;
+use poggit\libasynql\libasynql;
 
 class InventoriesManager
 {

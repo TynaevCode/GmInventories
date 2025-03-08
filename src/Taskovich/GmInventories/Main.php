@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskov1ch\GmInventories;
+namespace Taskovich\GmInventories;
 
 use pocketmine\plugin\PluginBase;
 
